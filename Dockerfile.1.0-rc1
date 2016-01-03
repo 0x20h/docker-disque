@@ -1,0 +1,23 @@
+FROM debian:stable
+
+RUN \
+  apt-get update && \
+  apt-get install -y --no-install-recommends \
+  supervisor \
+  ca-certificates \
+  build-essential \
+  git && \
+  cd /opt && \
+  git clone https://github.com/antirez/disque.git && \
+  cd disque && \
+  git checkout 1.0-rc1
+  make all && \
+  apt-get purge -y build-essential git && \
+  rm -rf /var/lib/apt/lists/*
+
+ENV PATH /opt/disque/src:$PATH
+COPY common/supervisord.conf /etc/supervisor/supervisord.conf
+COPY common/supervisor-disque.conf /etc/supervisor/conf.d/disque.conf
+
+EXPOSE 7711 9001
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
