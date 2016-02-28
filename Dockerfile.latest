@@ -2,11 +2,7 @@ FROM debian:stable
 
 RUN \
   apt-get update && \
-  apt-get install -y --no-install-recommends \
-  supervisor \
-  ca-certificates \
-  build-essential \
-  git && \
+  apt-get install -y --no-install-recommends supervisor ca-certificates build-essential git && \
   cd /opt && \
   git clone https://github.com/antirez/disque.git && \
   cd disque && \
